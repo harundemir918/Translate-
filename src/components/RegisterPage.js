@@ -19,7 +19,7 @@ class RegisterPage extends Component {
                 <CustomButton
                     title={'Giriş Yap'}
                 />
-                <Text>Hesabınız yok mu? Kayıt olun.</Text>
+                <Text>Hesabınız var mı? Giriş yapın.</Text>
             </View>
         )
     }
