@@ -1,11 +1,10 @@
 import React from 'react';
 import {StyleSheet, View, TouchableOpacity, Text} from 'react-native';
 
-const CustomButton = ({title, width, height, onPress}) => {
+const PickerButton = ({title, width, height, onPress}) => {
     return (
         <TouchableOpacity
             style={styles.button}
-            height={height}
             onPress={onPress}>
             <Text
                 style={styles.text}>
@@ -17,18 +16,17 @@ const CustomButton = ({title, width, height, onPress}) => {
 
 const styles = StyleSheet.create({
     button: {
-        width: '32%',
+        width: '26%',
         height: 50,
         backgroundColor: '#FFA41B',
         borderRadius: 10,
+        marginTop: 20,
         justifyContent: 'center',
-        alignItems: 'center',
-        alignSelf: 'center',
-        marginTop: 20
+        alignItems: 'center'
     },
     text: {
         color: 'white'
     }
 })
 
-export {CustomButton}
+export {PickerButton}

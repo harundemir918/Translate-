@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, View, TouchableOpacity, Text} from 'react-native';
 
-const CustomButton = ({title, width, height, onPress}) => {
+const CustomButtonLarge = ({title, width, height, onPress}) => {
     return (
         <TouchableOpacity
             style={styles.button}
@@ -17,7 +17,7 @@ const CustomButton = ({title, width, height, onPress}) => {
 
 const styles = StyleSheet.create({
     button: {
-        width: '32%',
+        width: '85%',
         height: 50,
         backgroundColor: '#FFA41B',
         borderRadius: 10,
@@ -31,4 +31,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export {CustomButton}
+export {CustomButtonLarge}
