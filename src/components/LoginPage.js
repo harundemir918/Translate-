@@ -1,11 +1,42 @@
 import React, {Component} from 'react';
 import {StyleSheet, View, Text, Image, TextInput} from 'react-native';
 import {CustomButtonLarge} from './common/'
+import firebase from '../database/firebase';
 
 class LoginPage extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            email: '',
+            password: ''
+        }
     }
+
+    userLogin() {
+        const {email, password} = this.state;
+
+        if (!email || !password) {
+            alert("Lütfen boş alan bırakmayınız.");
+        } else {
+            firebase.auth().signInWithEmailAndPassword(email, password)
+            .then((res) => {
+                this.setState({
+                    email: '',
+                    password: ''
+                });
+        
+                this.props.navigation.navigate('Translate');
+            })
+            .catch((error) => {
+                this.setState({
+                    password: ''
+                });
+
+                alert('Email ya da şifre yanlış.', 'Hata');
+            });            
+        }
+    }
+
     render() {
         return (
             <View style={styles.body}>
@@ -18,17 +49,30 @@ class LoginPage extends Component {
                         style={styles.input}
                         placeholder={'Email'}
                         placeholderTextColor={"#C97900"}
+                        keyboardType={'email-address'}
+                        onChangeText={(text) => {
+                            this.setState({
+                                email: text
+                            })
+                        }}
+                        value={this.state.email}
                     />
                     <TextInput
                         style={styles.input}
                         placeholder={'Şifre'}
                         placeholderTextColor={"#C97900"}
                         secureTextEntry
+                        onChangeText={(text) => {
+                            this.setState({
+                                password: text
+                            })
+                        }}
+                        value={this.state.password}
                     />
                 </View>                
                 <CustomButtonLarge
                     title={'Giriş Yap'}
-                    onPress={() => this.props.navigation.navigate('Translate')}
+                    onPress={this.userLogin.bind(this)}
                 />
                 <Text style={styles.textStyle}>
                     Hesabınız yok mu? <Text style={{fontWeight: 'bold'}} onPress={() => this.props.navigation.navigate('Register')}>Kayıt olun.</Text>

@@ -7,10 +7,12 @@ import {
   Text,
   Image,
   Modal,
-  TouchableHighlight
+  TouchableHighlight,
+  TouchableOpacity
 } from 'react-native';
 import {CustomButton, CustomInput, PickerButton} from './common';
 import axios from 'axios';
+import firebase from '../database/firebase';
 
 class TranslatePage extends Component {
   constructor(props) {
@@ -123,11 +125,22 @@ class TranslatePage extends Component {
           contentInsetAdjustmentBehavior="automatic"
           style={styles.scrollView}>
           <View>
-            <View style={{margin: 0}}>
+            <View style={styles.header}>
               <Image
                 style={styles.logo}
                 source={require('../../assets/images/translate.png')}
                 resizeMode='contain' />
+              <TouchableOpacity
+                style={{marginTop: 5}}
+                onPress={() => {
+                  firebase.auth().signOut();
+                  this.props.navigation.navigate('Login');}}>
+                <Image
+                  style={styles.logout}
+                  source={require('../../assets/images/logout.png')}
+                  resizeMode='contain'
+                />
+              </TouchableOpacity>
             </View>            
             <View style={styles.horizontalLine}></View>
             <CustomInput
@@ -210,6 +223,11 @@ const styles = StyleSheet.create({
     color: 'white',
     flex: 1
   },
+  header: {
+    margin: 0, 
+    flexDirection: 'row', 
+    justifyContent: 'space-around'
+  },
   textStyle: {
     width: '85%',
     height: 200,
@@ -227,8 +245,12 @@ const styles = StyleSheet.create({
   logo: {
     width: 150,
     height: 50,
-    flex: 1,
-    alignSelf: 'center'
+    alignSelf: 'flex-start'
+  },
+  logout: {
+    width: 50,
+    height: 40,
+    alignSelf: 'flex-end'
   },
   horizontalLine: {
     borderBottomColor: '#FFA41B',
@@ -237,9 +259,9 @@ const styles = StyleSheet.create({
   pickerView: {
     margin: 20, 
     backgroundColor: '#FFA41B',
-    bottom: 20,
-    left: 20,
-    right: 20,
+    bottom: -20,
+    left: -20,
+    right: -20,
     position: 'absolute',
     borderRadius: 10
   },

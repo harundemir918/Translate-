@@ -11,6 +11,7 @@ import TranslatePage from './components/TranslatePage';
 import MainPage from './components/MainPage';
 import SplashPage from './components/SplashPage';
 
+
 const Stack = createStackNavigator();
 class App extends Component {
   render() {

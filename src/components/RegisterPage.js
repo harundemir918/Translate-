@@ -1,11 +1,54 @@
 import React, {Component} from 'react';
 import {StyleSheet, View, Text, Image, TextInput} from 'react-native';
 import {CustomButtonLarge} from './common/'
+import firebase from '../database/firebase';
 
 class RegisterPage extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            email: '',
+            password: '',
+            passwordAgain: ''
+        }
     }
+
+    registerUser() {
+        const {email, password, passwordAgain} = this.state;
+
+        if (!email || !password || !passwordAgain) {
+            alert("Lütfen boş alan bırakmayınız.");
+        } else {
+            if (password == passwordAgain) {
+                firebase.auth().createUserWithEmailAndPassword(email, password)
+                .then((res) => {
+                    this.setState({
+                        email: '',
+                        password: '',
+                        passwordAgain: ''
+                    });
+            
+                    this.props.navigation.navigate('Login');
+                    alert('Kayıt başarılı. Şimdi giriş yapabilirsiniz.');
+                })
+                .catch((error) => {
+                    this.setState({
+                        email: '',
+                        password: '',
+                        passwordAgain: ''
+                    });
+                    alert('Bir hata oluştu. Lütfen tekrar deneyiniz.');
+                });
+            } else {
+                this.setState({
+                    password: '',
+                    passwordAgain: ''
+                });
+                alert("Şifreler aynı değil. Lütfen tekrar deneyiniz.")
+            }
+        }
+    }
+
     render() {
         return (
             <View style={styles.body}>
@@ -18,28 +61,41 @@ class RegisterPage extends Component {
                         style={styles.input}
                         placeholder={'Email'}
                         placeholderTextColor={"#C97900"}
+                        keyboardType={'email-address'}
+                        onChangeText={(text) => {
+                            this.setState({
+                                email: text
+                            })
+                        }}
                     />
                     <TextInput
                         style={styles.input}
                         placeholder={'Şifre'}
                         placeholderTextColor={"#C97900"}
                         secureTextEntry
+                        onChangeText={(text) => {
+                            this.setState({
+                                password: text
+                            })
+                        }}
                     />
                     <TextInput
                         style={styles.input}
                         placeholder={'Şifre (Tekrar)'}
                         placeholderTextColor={"#C97900"}
                         secureTextEntry
+                        onChangeText={(text) => {
+                            this.setState({
+                                passwordAgain: text
+                            })
+                        }}
                     />
                 </View>                
                 <CustomButtonLarge
                     title={'Kayıt Ol'}
                     width={300}
                     height={'30%'}
-                    onPress={() => {
-                        alert('Kayıt başarılı.');
-                        this.props.navigation.navigate('Login');
-                    }}
+                    onPress={this.registerUser.bind(this)}
                 />
                 <Text style={styles.textStyle}>
                     Hesabınız var mı? <Text style={{fontWeight: 'bold'}} onPress={() => this.props.navigation.navigate('Login')}>Giriş yapın.</Text>

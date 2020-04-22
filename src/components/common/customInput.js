@@ -1,12 +1,13 @@
 import React from 'react';
 import {StyleSheet, TextInput} from 'react-native';
 
-const CustomInput = ({placeholder, onChangeText, width, height, multiline}) => {
+const CustomInput = ({placeholder, onChangeText, width, height, multiline, keyboardType}) => {
     return (
         <TextInput
             style={styles.input}
             width={width}
             height={height}
+            keyboardType={keyboardType}
             multiline={multiline}
             placeholder={placeholder}
             placeholderTextColor={"#C97900"}
