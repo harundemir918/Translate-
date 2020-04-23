@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Text, Image, TextInput} from 'react-native';
+import {StyleSheet, View, Text, Image, TextInput, Alert, ActivityIndicator} from 'react-native';
 import {CustomButtonLarge} from './common/'
 import firebase from '../database/firebase';
 
@@ -8,36 +8,68 @@ class LoginPage extends Component {
         super(props);
         this.state = {
             email: '',
-            password: ''
+            password: '',
+            loading: false
         }
     }
 
     userLogin() {
         const {email, password} = this.state;
 
+        this.setState({
+            loading: true
+        });
+
         if (!email || !password) {
-            alert("Lütfen boş alan bırakmayınız.");
+            Alert.alert(
+                'Hata',
+                'Lütfen boş alan bırakmayınız.',
+                [
+                  {text: 'OK'},
+                ],
+                {cancelable: true},
+            );
+            this.setState({
+                loading: false
+            });
         } else {
             firebase.auth().signInWithEmailAndPassword(email, password)
             .then((res) => {
                 this.setState({
                     email: '',
-                    password: ''
+                    password: '',
+                    loading: false
                 });
         
                 this.props.navigation.navigate('Translate');
             })
             .catch((error) => {
                 this.setState({
-                    password: ''
+                    password: '',
+                    loading: false
                 });
 
-                alert('Email ya da şifre yanlış.', 'Hata');
+                Alert.alert(
+                    'Hata',
+                    'Email ya da şifre yanlış. Lütfen tekrar deneyiniz.',
+                    [
+                      {text: 'OK'},
+                    ],
+                    {cancelable: true},
+                );
             });            
         }
     }
 
-    render() {
+    render() {        
+        const loginButton = this.state.loading ? (
+            <ActivityIndicator size="large" color="#FFA41B" />
+        ) : (
+            <CustomButtonLarge
+                    title={'Giriş Yap'}
+                    onPress={this.userLogin.bind(this)}
+            />
+        );
         return (
             <View style={styles.body}>
                 <Image
@@ -70,10 +102,7 @@ class LoginPage extends Component {
                         value={this.state.password}
                     />
                 </View>                
-                <CustomButtonLarge
-                    title={'Giriş Yap'}
-                    onPress={this.userLogin.bind(this)}
-                />
+                {loginButton}
                 <Text style={styles.textStyle}>
                     Hesabınız yok mu? <Text style={{fontWeight: 'bold'}} onPress={() => this.props.navigation.navigate('Register')}>Kayıt olun.</Text>
                 </Text>

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Text, Image, TextInput} from 'react-native';
+import {StyleSheet, View, Text, Image, TextInput, Alert, ActivityIndicator} from 'react-native';
 import {CustomButtonLarge} from './common/'
 import firebase from '../database/firebase';
 
@@ -9,15 +9,31 @@ class RegisterPage extends Component {
         this.state = {
             email: '',
             password: '',
-            passwordAgain: ''
+            passwordAgain: '',
+            loading: false
         }
     }
 
     registerUser() {
         const {email, password, passwordAgain} = this.state;
 
+        this.setState({
+            loading: true
+        });
+
         if (!email || !password || !passwordAgain) {
-            alert("Lütfen boş alan bırakmayınız.");
+            Alert.alert(
+                'Hata',
+                'Lütfen boş alan bırakmayınız.',
+                [
+                  {text: 'OK'},
+                ],
+                {cancelable: true},
+            );
+
+            this.setState({
+                loading: false
+            });
         } else {
             if (password == passwordAgain) {
                 firebase.auth().createUserWithEmailAndPassword(email, password)
@@ -25,31 +41,63 @@ class RegisterPage extends Component {
                     this.setState({
                         email: '',
                         password: '',
-                        passwordAgain: ''
+                        passwordAgain: '',
+                        loading: false
                     });
             
                     this.props.navigation.navigate('Login');
-                    alert('Kayıt başarılı. Şimdi giriş yapabilirsiniz.');
+                    Alert.alert(
+                        'Kayıt',
+                        'Kayıt başarılı. Şimdi giriş yapabilirsiniz.',
+                        [
+                          {text: 'OK'},
+                        ],
+                        {cancelable: true},
+                    );
                 })
                 .catch((error) => {
                     this.setState({
                         email: '',
                         password: '',
-                        passwordAgain: ''
+                        passwordAgain: '',
+                        loading: false
                     });
-                    alert('Bir hata oluştu. Lütfen tekrar deneyiniz.');
+                    Alert.alert(
+                        'Hata',
+                        'Bir hata oluştu. Lütfen tekrar deneyiniz.',
+                        [
+                          {text: 'OK'},
+                        ],
+                        {cancelable: true},
+                    );
                 });
             } else {
                 this.setState({
                     password: '',
-                    passwordAgain: ''
+                    passwordAgain: '',
+                    loading: false
                 });
-                alert("Şifreler aynı değil. Lütfen tekrar deneyiniz.")
+                Alert.alert(
+                    'Hata',
+                    'Şifreler aynı değil. Lütfen tekrar deneyiniz.',
+                    [
+                      {text: 'OK'},
+                    ],
+                    {cancelable: true},
+                );
             }
         }
     }
 
     render() {
+        const registerButton = this.state.loading ? (
+            <ActivityIndicator size="large" color="#FFA41B" />
+        ) : (
+            <CustomButtonLarge
+                title={'Kayıt Ol'}
+                onPress={this.registerUser.bind(this)}
+            />
+        );
         return (
             <View style={styles.body}>
                 <Image
@@ -91,12 +139,7 @@ class RegisterPage extends Component {
                         }}
                     />
                 </View>                
-                <CustomButtonLarge
-                    title={'Kayıt Ol'}
-                    width={300}
-                    height={'30%'}
-                    onPress={this.registerUser.bind(this)}
-                />
+                {registerButton}
                 <Text style={styles.textStyle}>
                     Hesabınız var mı? <Text style={{fontWeight: 'bold'}} onPress={() => this.props.navigation.navigate('Login')}>Giriş yapın.</Text>
                 </Text>
