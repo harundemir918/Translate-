@@ -81,7 +81,7 @@ class TranslatePage extends Component {
   }
 
   translate() {
-    const key = 'trnsl.1.1.20200419T174241Z.6c57a84c93149a5a.132d34d5799d0891cd5bf09232cc6f56eb234fa2'
+    const key = '' // removed the key because of security stuff
     const translateText = this.state.input;
     const sourceLang = this.state.sourceLang;
     const destinationLang = this.state.destinationLang;
